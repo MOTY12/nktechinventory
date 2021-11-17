@@ -6,7 +6,7 @@ function authJwt() {
     return expressJwt({
         secret,
         algorithms: ['HS256'],
-        sisRevoked: isRevoked
+        isRevoked: isRevoked
     }).unless({
         path: [
             { url: /\/inventory\/product(.*)/, methods: ['GET', 'OPTIONS'] },

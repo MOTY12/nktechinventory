@@ -1,9 +1,10 @@
 const express = require(`express`)
 const router = express()
 const Inventorys = require('../model/inventory')
+const { validateToken } = require('../helper/auth')
 
 
-router.get('/product', async(req, res) => {
+router.get('/product', validateToken, async(req, res) => {
     const userlist = await Inventorys.find()
     res.json(userlist)
     if (!userlist) {
@@ -15,7 +16,7 @@ router.get('/product', async(req, res) => {
 })
 
 //insert new user
-router.post('/product', async(req, res) => {
+router.post('/product', validateToken, async(req, res) => {
     const user = new Inventorys({
         name: req.body.name,
         price: req.body.price
@@ -30,7 +31,7 @@ router.post('/product', async(req, res) => {
 })
 
 //update product
-router.put('/product/:id', async(req, res) => {
+router.put('/product/:id', validateToken, async(req, res) => {
     const updateproduct = await Inventorys.findByIdAndUpdate(
         req.params.id, {
             name: req.body.name,
@@ -53,7 +54,7 @@ router.put('/product/:id', async(req, res) => {
 
 
 //delete product
-router.delete('/product/:id', async(req, res) => {
+router.delete('/product/:id', validateToken, async(req, res) => {
     const product = await Inventorys.findByIdAndRemove(req.params.id)
         .then(product => {
             if (product) {

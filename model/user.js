@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String
     },
+    token: {
+        type: String
+    },
     isAdmin: {
         type: Boolean,
         default: 'false',

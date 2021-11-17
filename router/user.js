@@ -5,17 +5,39 @@ const bcrypt = require('bcryptjs')
 const Users = require('../model/user')
     //insert new user
 router.post('/register', async(req, res) => {
-    const user = new Users({
-        surname: req.body.surname,
-        firstname: req.body.firstname,
-        Email: req.body.Email,
-        passwordHash: bcrypt.hashSync(req.body.passwordHash, 10)
-    })
-    const Userssave = await user.save()
+    try {
+        const { surname, firstname, Email, password } = req.body
+        const oldUser = await Users.findOne({ Email })
+            // if (oldUser) return res.status(500).send("user already exist. Please login")
 
-    if (!Userssave) return res.status(404).send('Unsuccessful!!! Pls try again')
-    res.send(Userssave)
+        //encryp password
+        passwordHashed = await bcrypt.hashSync(req.body.password, 10)
 
+        const user = await Users.create({
+            surname,
+            firstname,
+            Email,
+            passwordHash: passwordHashed
+        })
+        const token = jwt.sign({
+                userId: user._id,
+                surname,
+                firstname,
+                Email,
+            },
+            process.env.secret, { expiresIn: '2h' }
+        )
+        user.token = token;
+
+        // const Userssave = await user.save()
+
+        // if (!Userssave) return res.status(404).send('Unsuccessful!!! Pls try again')
+        // res.send(Userssave)
+        res.json(user)
+
+    } catch (err) {
+        console.log(err);
+    }
 })
 
 //login user user => user.name === req.body.name
@@ -34,12 +56,17 @@ router.post('/login', async(req, res) => {
                 Email: user.Email,
                 isAdmin: user.isAdmin
             },
-            secret, { expiresIn: '1d' }
+            process.env.secret, { expiresIn: '2h' }
         )
-        return res.cookie("access_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-        }).status(200).json({ message: "Logged in successfully 😊 👌" });
+        user.token = token
+
+        res.status(200).json({ token: user.token })
+
+        // return res.cookie("access_token", token, {
+        //         httpOnly: true,
+        //         secure: process.env.NODE_ENV === "production",
+        //     }).status(200).json({ user })
+        //  message: "Logged in successfully 😊 👌" });
     } else {
         res.status(400).send('password is wrong!');
     }

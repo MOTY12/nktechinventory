@@ -1,9 +1,10 @@
 const { Order } = require('../model/cart');
 const express = require('express');
 const { OrderItem } = require('../model/cart-item');
+const { validateToken } = require('../helper/auth')
 const router = express.Router();
 
-router.get(`/cart`, async(req, res) => {
+router.get(`/cart`, validateToken, async(req, res) => {
     const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
 
     if (!orderList) {
@@ -12,7 +13,7 @@ router.get(`/cart`, async(req, res) => {
     res.send(orderList);
 })
 
-router.get(`/:id`, async(req, res) => {
+router.get(`/:id`, validateToken, async(req, res) => {
     const order = await Order.findById(req.params.id)
         .populate('user', 'name')
         .populate({
@@ -32,7 +33,7 @@ router.get(`/:id`, async(req, res) => {
 
 
 
-router.post('/cart', async(req, res) => {
+router.post('/cart', validateToken, async(req, res) => {
     const orderItemsIds = Promise.all(req.body.orderItems.map(async(orderItem) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
