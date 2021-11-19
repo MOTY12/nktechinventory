@@ -22,7 +22,7 @@ app.use(`${apis}`, userRouter)
 app.use(`${apis}`, cartRouter)
 
 
-app.get('/moty', (req, res) => {
+app.get('/', (req, res) => {
     res.send('helo world')
 })
 
