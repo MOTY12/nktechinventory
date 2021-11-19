@@ -13,7 +13,7 @@ router.get(`/cart`, async(req, res) => {
         }
         res.send(orderList);
     } catch (err) {
-        cosole.log(err)
+        console.log(err)
     }
 })
 
