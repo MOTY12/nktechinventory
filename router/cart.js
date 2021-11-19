@@ -5,12 +5,16 @@ const { validateToken } = require('../helper/auth')
 const router = express.Router();
 
 router.get(`/cart`, async(req, res) => {
-    const orderList = await Order.find().populate('orderItems').populate('user', 'name').sort({ 'dateOrdered': -1 });
+    try {
+        const orderList = await Order.find().populate('orderItems').populate('user', 'name').sort({ 'dateOrdered': -1 });
 
-    if (!orderList) {
-        res.status(500).json({ success: false })
+        if (!orderList) {
+            res.status(500).json({ success: false })
+        }
+        res.send(orderList);
+    } catch (err) {
+        cosole.log(err)
     }
-    res.send(orderList);
 })
 
 router.get(`/:id`, validateToken, async(req, res) => {
