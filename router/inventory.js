@@ -16,7 +16,7 @@ router.get('/product', validateToken, async(req, res) => {
 })
 
 //insert new user
-router.post('/product', validateToken, async(req, res) => {
+router.post('/product', async(req, res) => {
     const user = new Inventorys({
         name: req.body.name,
         price: req.body.price

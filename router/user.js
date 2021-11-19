@@ -8,7 +8,7 @@ router.post('/register', async(req, res) => {
     try {
         const { surname, firstname, Email, password } = req.body
         const oldUser = await Users.findOne({ Email })
-            // if (oldUser) return res.status(500).send("user already exist. Please login")
+        if (oldUser) return res.status(500).send("user already exist. Please login")
 
         //encryp password
         passwordHashed = await bcrypt.hashSync(req.body.password, 10)
