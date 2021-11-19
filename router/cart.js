@@ -5,7 +5,7 @@ const { validateToken } = require('../helper/auth')
 const router = express.Router();
 
 router.get(`/cart`, validateToken, async(req, res) => {
-    const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
+    const orderList = await Order.find().populate('orderItems').populate('user', 'name').sort({ 'dateOrdered': -1 });
 
     if (!orderList) {
         res.status(500).json({ success: false })
