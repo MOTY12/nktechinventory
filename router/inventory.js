@@ -31,7 +31,7 @@ router.post('/product', async(req, res) => {
 })
 
 //update product
-router.put('/product/:id', validateToken, async(req, res) => {
+router.put('/product/:id', async(req, res) => {
     const updateproduct = await Inventorys.findByIdAndUpdate(
         req.params.id, {
             name: req.body.name,

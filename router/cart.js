@@ -33,7 +33,7 @@ router.get(`/:id`, validateToken, async(req, res) => {
 
 
 
-router.post('/cart', validateToken, async(req, res) => {
+router.post('/cart', async(req, res) => {
     const orderItemsIds = Promise.all(req.body.orderItems.map(async(orderItem) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
