@@ -4,7 +4,7 @@ const { OrderItem } = require('../model/cart-item');
 const { validateToken } = require('../helper/auth')
 const router = express.Router();
 
-router.get(`/cart`, validateToken, async(req, res) => {
+router.get(`/cart`, async(req, res) => {
     const orderList = await Order.find().populate('orderItems').populate('user', 'name').sort({ 'dateOrdered': -1 });
 
     if (!orderList) {
